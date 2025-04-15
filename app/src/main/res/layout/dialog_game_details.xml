@@ -106,7 +106,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="Закрыть"
-        android:backgroundTint="@color/colorPrimary"
-        android:textColor="@color/white"/>
+        android:text="Закрыть"/>
 </LinearLayout>

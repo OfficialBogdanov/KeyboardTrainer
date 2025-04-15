@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements CustomKeyboard.Ke
         restartButton.setVisibility(View.GONE);
 
         WordGenerator wordGenerator = new WordGenerator();
-        WordGenerator.GeneratedWords generatedWords = wordGenerator.generateWords(10);
+        WordGenerator.GeneratedWords generatedWords = wordGenerator.generateWords(20);
 
         originalText = generatedWords.getText();
         spannableStringBuilder = new SpannableStringBuilder(originalText);

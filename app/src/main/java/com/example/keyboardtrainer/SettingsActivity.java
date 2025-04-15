@@ -1,25 +1,31 @@
 package com.example.keyboardtrainer;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import yuku.ambilwarna.AmbilWarnaDialog;
+import java.util.Random;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -28,9 +34,15 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton lightThemeRadio;
     private RadioButton darkThemeRadio;
     private RadioButton systemThemeRadio;
-    private static final int COLOR_PICKER_REQUEST = 1;
-    private int selectedColor;
-    private SharedPreferences prefs;
+    private TextView demoTextView, demoTimerTextView;
+    private SpannableStringBuilder spannable;
+    private int cursorPosition = 0;
+    private Handler handler = new Handler();
+    private String demoText = "Симуляция тренажёрного процесса. Так будет выглядеть тренажёрное поле.";
+    private CountDownTimer countDownTimer;
+    private int timerSeconds = 20;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,46 +66,89 @@ public class SettingsActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(v -> logoutUser());
         deleteAccountButton.setOnClickListener(v -> showDeleteAccountDialog());
 
-        prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE);
-        selectedColor = prefs.getInt("theme_color", ContextCompat.getColor(this, R.color.purple_500));
-
-        setupColorPicker();
+        demoTextView = findViewById(R.id.demoTextView);
+        demoTimerTextView = findViewById(R.id.timerTextView);
+        spannable = new SpannableStringBuilder(demoText);
+        startTimer();
+        startCursorAnimation();
     }
 
-    private void setupColorPicker() {
-        Button colorPickerButton = findViewById(R.id.colorPickerButton);
-        View colorPreview = findViewById(R.id.colorPreview);
+    private void startTimer() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
 
-        colorPreview.setBackgroundColor(selectedColor);
+        countDownTimer = new CountDownTimer(timerSeconds * 1000L, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int seconds = (int) (millisUntilFinished / 1000);
+                demoTimerTextView.setText("Таймер: " + seconds + "");
+            }
 
-        colorPickerButton.setOnClickListener(v -> {
-            new AmbilWarnaDialog(this, selectedColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-                @Override
-                public void onOk(AmbilWarnaDialog dialog, int color) {
-                    selectedColor = color;
-                    colorPreview.setBackgroundColor(color);
-                    saveColor(color);
-                    applyThemeColor();
+            @Override
+            public void onFinish() {
+                demoTimerTextView.setText("Таймер: 0");
+                cursorPosition = 0;
+                startTimer();
+            }
+        }.start();
+    }
+
+    private void startCursorAnimation() {
+        Random random = new Random();
+        Runnable cursorRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                clearAllSpans();
+
+                for (int i = 0; i < cursorPosition; i++) {
+                    int color = random.nextBoolean() ? Color.RED : Color.GREEN;
+                    spannable.setSpan(new ForegroundColorSpan(color), i, i + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
 
-                @Override
-                public void onCancel(AmbilWarnaDialog dialog) {
+                if (cursorPosition < spannable.length()) {
+                    spannable.setSpan(new UnderlineSpan(), cursorPosition, cursorPosition + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-            }).show();
-        });
+
+                demoTextView.setText(spannable);
+
+
+                cursorPosition++;
+                if (cursorPosition > spannable.length()) {
+                    cursorPosition = 0;
+
+                    clearAllSpans();
+                }
+
+                handler.postDelayed(this, 300);
+            }
+
+            private void clearAllSpans() {
+                ForegroundColorSpan[] colorSpans = spannable.getSpans(0, spannable.length(), ForegroundColorSpan.class);
+                UnderlineSpan[] underlineSpans = spannable.getSpans(0, spannable.length(), UnderlineSpan.class);
+
+                for (ForegroundColorSpan span : colorSpans) {
+                    spannable.removeSpan(span);
+                }
+                for (UnderlineSpan span : underlineSpans) {
+                    spannable.removeSpan(span);
+                }
+            }
+        };
+
+        handler.post(cursorRunnable);
     }
 
-    private void saveColor(int color) {
-        prefs.edit().putInt("theme_color", color).apply();
-    }
-
-    private void applyThemeColor() {
-        // Пример изменения цвета BottomNavigation
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setBackgroundColor(selectedColor);
-
-        // Здесь можно добавить другие элементы интерфейса
-        Toast.makeText(this, "Цвет применен", Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
     private void setupBottomNavigation(BottomNavigationView bottomNav) {
