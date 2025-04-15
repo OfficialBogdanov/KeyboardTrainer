@@ -1,6 +1,7 @@
 package com.example.keyboardtrainer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +13,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -24,6 +28,9 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton lightThemeRadio;
     private RadioButton darkThemeRadio;
     private RadioButton systemThemeRadio;
+    private static final int COLOR_PICKER_REQUEST = 1;
+    private int selectedColor;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,47 @@ public class SettingsActivity extends AppCompatActivity {
 
         logoutButton.setOnClickListener(v -> logoutUser());
         deleteAccountButton.setOnClickListener(v -> showDeleteAccountDialog());
+
+        prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        selectedColor = prefs.getInt("theme_color", ContextCompat.getColor(this, R.color.purple_500));
+
+        setupColorPicker();
+    }
+
+    private void setupColorPicker() {
+        Button colorPickerButton = findViewById(R.id.colorPickerButton);
+        View colorPreview = findViewById(R.id.colorPreview);
+
+        colorPreview.setBackgroundColor(selectedColor);
+
+        colorPickerButton.setOnClickListener(v -> {
+            new AmbilWarnaDialog(this, selectedColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                @Override
+                public void onOk(AmbilWarnaDialog dialog, int color) {
+                    selectedColor = color;
+                    colorPreview.setBackgroundColor(color);
+                    saveColor(color);
+                    applyThemeColor();
+                }
+
+                @Override
+                public void onCancel(AmbilWarnaDialog dialog) {
+                }
+            }).show();
+        });
+    }
+
+    private void saveColor(int color) {
+        prefs.edit().putInt("theme_color", color).apply();
+    }
+
+    private void applyThemeColor() {
+        // Пример изменения цвета BottomNavigation
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setBackgroundColor(selectedColor);
+
+        // Здесь можно добавить другие элементы интерфейса
+        Toast.makeText(this, "Цвет применен", Toast.LENGTH_SHORT).show();
     }
 
     private void setupBottomNavigation(BottomNavigationView bottomNav) {

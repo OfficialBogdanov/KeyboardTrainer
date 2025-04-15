@@ -58,6 +58,24 @@
                 android:layout_height="wrap_content"
                 android:text="Как в системе"/>
         </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Цвет интерфейса"
+            android:textSize="18sp"/>
+
+        <Button
+            android:id="@+id/colorPickerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выбрать цвет"/>
+
+        <View
+            android:id="@+id/colorPreview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/purple_500" />
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
