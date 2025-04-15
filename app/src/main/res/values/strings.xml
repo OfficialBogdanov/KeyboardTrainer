@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">KeyboardTrainer</string>
+    <string name="speed_format">Скорость: %d зн/мин</string>
+    <string name="accuracy_format">Точность: %s%%</string>
+    <string name="errors_format">Ошибки: %d</string>
+    <string name="text_stats_format">Символов: %d/%d</string>
+</resources>

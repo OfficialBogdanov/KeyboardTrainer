@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "255477631797",
+    "project_id": "keyboardtrainer-official",
+    "storage_bucket": "keyboardtrainer-official.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255477631797:android:065cf537741c72d5e3da7c",
+        "android_client_info": {
+          "package_name": "com.example.keyboardtrainer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjOSFH4NfiWvxb60Q4WoARGNOFJv-iXv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
