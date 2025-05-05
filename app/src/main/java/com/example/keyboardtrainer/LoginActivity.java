@@ -1,21 +1,16 @@
 package com.example.keyboardtrainer;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -28,8 +23,8 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText email, password, username, passwordConfirm;
-    private Button btnAction, btnLogin, btnSignUp;
-    private LinearLayout inputContainer;
+    private Button btnAction;
+    private TextInputLayout usernameContainer, passwordConfirmContainer;
     private FirebaseAuth auth;
     private boolean isLoginMode = true;
 
@@ -52,9 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         passwordConfirm = findViewById(R.id.passwordConfirm);
         btnAction = findViewById(R.id.btn_action);
-        btnLogin = findViewById(R.id.btn_login);
-        btnSignUp = findViewById(R.id.btn_signup);
-        inputContainer = findViewById(R.id.input_container);
+        Button btnLogin = findViewById(R.id.btn_login);
+        Button btnSignUp = findViewById(R.id.btn_signup);
+
+        usernameContainer = findViewById(R.id.username_container);
+        passwordConfirmContainer = findViewById(R.id.password_confirm_container);
 
         btnLogin.setOnClickListener(v -> switchToLoginMode());
         btnSignUp.setOnClickListener(v -> switchToRegisterMode());
@@ -66,22 +63,22 @@ public class LoginActivity extends AppCompatActivity {
                 registerUser();
             }
         });
+
+        switchToLoginMode();
     }
 
     private void switchToLoginMode() {
         isLoginMode = true;
-        username.setVisibility(View.GONE);
-        passwordConfirm.setVisibility(View.GONE);
+        usernameContainer.setVisibility(View.GONE);
+        passwordConfirmContainer.setVisibility(View.GONE);
         btnAction.setText("Войти");
-        inputContainer.setVisibility(View.VISIBLE);
     }
 
     private void switchToRegisterMode() {
         isLoginMode = false;
-        username.setVisibility(View.VISIBLE);
-        passwordConfirm.setVisibility(View.VISIBLE);
+        usernameContainer.setVisibility(View.VISIBLE);
+        passwordConfirmContainer.setVisibility(View.VISIBLE);
         btnAction.setText("Зарегистрироваться");
-        inputContainer.setVisibility(View.VISIBLE);
     }
 
     private void loginUser() {

@@ -1,6 +1,6 @@
 package com.example.keyboardtrainer;
 
-import android.app.Dialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,13 +9,15 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,7 +31,6 @@ public class StatsActivity extends AppCompatActivity {
 
     private LinearLayout statsContainer;
     private FirebaseFirestore db;
-    private Dialog gameDetailsDialog;
     private FirebaseAuth auth;
 
     @Override
@@ -49,7 +50,7 @@ public class StatsActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.navigation_stats);
 
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.navigation_game) {
                 startActivity(new Intent(this, MainActivity.class));
@@ -73,13 +74,12 @@ public class StatsActivity extends AppCompatActivity {
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
-
-
                     if (task.isSuccessful()) {
                         statsContainer.removeAllViews();
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             GameStats stats = new GameStats(
+                                    document.getId(),
                                     document.getString("userId"),
                                     document.getLong("score"),
                                     document.getLong("correctChars"),
@@ -104,6 +104,9 @@ public class StatsActivity extends AppCompatActivity {
         TextView dateView = statItem.findViewById(R.id.date);
         View userIndicator = statItem.findViewById(R.id.userIndicator);
 
+        scoreView.setText(String.valueOf(stats.score));
+        dateView.setText(formatDate(stats.timestamp));
+
         db.collection("users").document(stats.userId)
                 .get()
                 .addOnSuccessListener(document -> {
@@ -111,32 +114,22 @@ public class StatsActivity extends AppCompatActivity {
                     usernameView.setText(username != null ? username : "Аноним");
                 });
 
-        scoreView.setText(String.valueOf(stats.score));
-        dateView.setText(formatDate(stats.timestamp));
-
-        if (isCurrentUser) {
-            userIndicator.setVisibility(View.VISIBLE);
-        }
-
         statItem.setOnClickListener(v -> showGameDetails(stats));
         statsContainer.addView(statItem);
     }
 
     private void showGameDetails(GameStats stats) {
-        gameDetailsDialog = new Dialog(this);
-        gameDetailsDialog.setContentView(R.layout.dialog_game_details);
-        gameDetailsDialog.setCancelable(true);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_game_details, null);
 
-        TextView username = gameDetailsDialog.findViewById(R.id.detail_username);
-        TextView score = gameDetailsDialog.findViewById(R.id.detail_score);
-        TextView date = gameDetailsDialog.findViewById(R.id.detail_date);
-        TextView speed = gameDetailsDialog.findViewById(R.id.detail_speed);
-        TextView accuracy = gameDetailsDialog.findViewById(R.id.detail_accuracy);
-        TextView errors = gameDetailsDialog.findViewById(R.id.detail_errors);
-        TextView textStats = gameDetailsDialog.findViewById(R.id.detail_text_stats);
-        ScrollView textScroll = gameDetailsDialog.findViewById(R.id.detail_text_scroll);
-        TextView originalText = gameDetailsDialog.findViewById(R.id.detail_original_text);
-        Button closeButton = gameDetailsDialog.findViewById(R.id.detail_close_btn);
+        TextView username = dialogView.findViewById(R.id.detail_username);
+        TextView score = dialogView.findViewById(R.id.detail_score);
+        TextView date = dialogView.findViewById(R.id.detail_date);
+        TextView speed = dialogView.findViewById(R.id.detail_speed);
+        TextView accuracy = dialogView.findViewById(R.id.detail_accuracy);
+        TextView errors = dialogView.findViewById(R.id.detail_errors);
+        TextView originalText = dialogView.findViewById(R.id.detail_original_text);
+        MaterialButton btnOk = dialogView.findViewById(R.id.btn_ok);
+        MaterialButton btnDelete = dialogView.findViewById(R.id.btn_delete);
 
         db.collection("users").document(stats.userId)
                 .get()
@@ -145,27 +138,79 @@ public class StatsActivity extends AppCompatActivity {
                     username.setText(usernameText != null ? usernameText : "Аноним");
                 });
 
-        score.setText(String.valueOf("Очков: " + stats.score));
+        score.setText(String.valueOf(stats.score));
         date.setText(formatDate(stats.timestamp));
 
         long charsPerMinute = (stats.correctChars * 60) / 30;
         double accuracyPercent = (stats.totalChars > 0) ?
                 (stats.correctChars * 100.0 / stats.totalChars) : 0;
 
-        speed.setText(getString(R.string.speed_format, charsPerMinute));
-        accuracy.setText(getString(R.string.accuracy_format, String.format(Locale.getDefault(), "%.1f", accuracyPercent)));
-        errors.setText(getString(R.string.errors_format, stats.errors));
-        textStats.setText(getString(R.string.text_stats_format, stats.correctChars, stats.totalChars));
+        speed.setText(String.format(Locale.getDefault(), "%d зн./мин", charsPerMinute));
+        accuracy.setText(String.format(Locale.getDefault(), "%.1f%%", accuracyPercent));
+        errors.setText(String.valueOf(stats.errors));
 
         if (stats.originalText != null && stats.typedText != null) {
-            SpannableStringBuilder coloredText = formatColoredText(stats.originalText, stats.typedText);
-            originalText.setText(coloredText);
+            originalText.setText(formatColoredText(stats.originalText, stats.typedText));
         } else {
             originalText.setText("Текст недоступен");
         }
 
-        closeButton.setOnClickListener(v -> gameDetailsDialog.dismiss());
-        gameDetailsDialog.show();
+        String currentUserId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+        boolean isOwner = currentUserId != null && currentUserId.equals(stats.userId);
+
+        btnDelete.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
+
+        btnOk.setOnClickListener(v -> dialog.dismiss());
+        btnDelete.setOnClickListener(v -> {
+            dialog.dismiss();
+            showDeleteRecordDialog(stats);
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteRecordDialog(GameStats stats) {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_confirm_action, null);
+
+        TextView title = dialogView.findViewById(R.id.dialog_title);
+        TextView message = dialogView.findViewById(R.id.dialog_message);
+        MaterialButton cancelBtn = dialogView.findViewById(R.id.btn_cancel);
+        MaterialButton confirmBtn = dialogView.findViewById(R.id.btn_confirm);
+
+        title.setText("Удаление записи");
+        message.setText("Вы уверены, что хотите удалить эту запись? Это действие нельзя отменить.");
+        confirmBtn.setText("Удалить");
+
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        confirmBtn.setOnClickListener(v -> {
+            dialog.dismiss();
+            deleteStats(stats);
+        });
+
+        dialog.show();
+    }
+
+    private void deleteStats(GameStats stats) {
+        db.collection("scores").document(stats.documentId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Запись удалена", Toast.LENGTH_SHORT).show();
+                    loadUserStats();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Ошибка при удалении: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
     }
 
     private SpannableStringBuilder formatColoredText(String original, String typed) {
@@ -192,6 +237,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private static class GameStats {
+        String documentId;
         String userId;
         Long score;
         Long correctChars;
@@ -201,8 +247,9 @@ public class StatsActivity extends AppCompatActivity {
         String typedText;
         Timestamp timestamp;
 
-        GameStats(String userId, Long score, Long correctChars, Long totalChars,
+        GameStats(String documentId, String userId, Long score, Long correctChars, Long totalChars,
                   Long errors, String originalText, String typedText, Timestamp timestamp) {
+            this.documentId = documentId;
             this.userId = userId;
             this.score = score;
             this.correctChars = correctChars;

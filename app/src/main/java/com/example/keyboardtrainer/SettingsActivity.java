@@ -1,17 +1,10 @@
 package com.example.keyboardtrainer;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -22,27 +15,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Random;
+import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "KeyboardTrainerPrefs";
+    private static final String CURSOR_TYPE_KEY = "cursorType";
+    private static final String THEME_MODE_KEY = "themeMode";
+
     private FirebaseAuth mAuth;
     private RadioGroup themeRadioGroup;
-    private RadioButton lightThemeRadio;
-    private RadioButton darkThemeRadio;
-    private RadioButton systemThemeRadio;
-    private TextView demoTextView, demoTimerTextView;
-    private SpannableStringBuilder spannable;
-    private int cursorPosition = 0;
-    private Handler handler = new Handler();
-    private String demoText = "Симуляция тренажёрного процесса. Так будет выглядеть тренажёрное поле.";
-    private CountDownTimer countDownTimer;
-    private int timerSeconds = 20;
-
-
+    private RadioGroup cursorRadioGroup;
+    private static final String TIMER_STYLE_KEY = "timerStyle";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,113 +38,25 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         mAuth = FirebaseAuth.getInstance();
-
-        Button logoutButton = findViewById(R.id.logoutButton);
-        Button deleteAccountButton = findViewById(R.id.deleteAccountButton);
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
         themeRadioGroup = findViewById(R.id.themeRadioGroup);
-        lightThemeRadio = findViewById(R.id.lightThemeRadio);
-        darkThemeRadio = findViewById(R.id.darkThemeRadio);
-        systemThemeRadio = findViewById(R.id.systemThemeRadio);
+        cursorRadioGroup = findViewById(R.id.cursorRadioGroup);
 
-        setupBottomNavigation(bottomNav);
+        setupBottomNavigation();
+        loadSettings();
         setupThemeSelector();
+        setupCursorSelector();
+        setupTimerStyleSelector();
 
-        logoutButton.setOnClickListener(v -> logoutUser());
-        deleteAccountButton.setOnClickListener(v -> showDeleteAccountDialog());
-
-        demoTextView = findViewById(R.id.demoTextView);
-        demoTimerTextView = findViewById(R.id.timerTextView);
-        spannable = new SpannableStringBuilder(demoText);
-        startTimer();
-        startCursorAnimation();
+        findViewById(R.id.logoutButton).setOnClickListener(v -> logoutUser());
+        findViewById(R.id.deleteAccountButton).setOnClickListener(v -> showDeleteAccountDialog());
     }
 
-    private void startTimer() {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
-
-        countDownTimer = new CountDownTimer(timerSeconds * 1000L, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                int seconds = (int) (millisUntilFinished / 1000);
-                demoTimerTextView.setText("Таймер: " + seconds + "");
-            }
-
-            @Override
-            public void onFinish() {
-                demoTimerTextView.setText("Таймер: 0");
-                cursorPosition = 0;
-                startTimer();
-            }
-        }.start();
-    }
-
-    private void startCursorAnimation() {
-        Random random = new Random();
-        Runnable cursorRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                clearAllSpans();
-
-                for (int i = 0; i < cursorPosition; i++) {
-                    int color = random.nextBoolean() ? Color.RED : Color.GREEN;
-                    spannable.setSpan(new ForegroundColorSpan(color), i, i + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-
-                if (cursorPosition < spannable.length()) {
-                    spannable.setSpan(new UnderlineSpan(), cursorPosition, cursorPosition + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-
-                demoTextView.setText(spannable);
-
-
-                cursorPosition++;
-                if (cursorPosition > spannable.length()) {
-                    cursorPosition = 0;
-
-                    clearAllSpans();
-                }
-
-                handler.postDelayed(this, 300);
-            }
-
-            private void clearAllSpans() {
-                ForegroundColorSpan[] colorSpans = spannable.getSpans(0, spannable.length(), ForegroundColorSpan.class);
-                UnderlineSpan[] underlineSpans = spannable.getSpans(0, spannable.length(), UnderlineSpan.class);
-
-                for (ForegroundColorSpan span : colorSpans) {
-                    spannable.removeSpan(span);
-                }
-                for (UnderlineSpan span : underlineSpans) {
-                    spannable.removeSpan(span);
-                }
-            }
-        };
-
-        handler.post(cursorRunnable);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
-    }
-
-    private void setupBottomNavigation(BottomNavigationView bottomNav) {
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.navigation_settings);
 
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-
             if (id == R.id.navigation_game) {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
@@ -165,68 +65,152 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(new Intent(this, StatsActivity.class));
                 finish();
                 return true;
-            } else if (id == R.id.navigation_settings) {
-                return true;
             }
-            return false;
+            return id == R.id.navigation_settings;
+        });
+    }
+
+    private void loadSettings() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        int themeMode = prefs.getInt(THEME_MODE_KEY, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        switch (themeMode) {
+            case AppCompatDelegate.MODE_NIGHT_NO:
+                ((RadioButton) findViewById(R.id.lightThemeRadio)).setChecked(true);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_YES:
+                ((RadioButton) findViewById(R.id.darkThemeRadio)).setChecked(true);
+                break;
+            default:
+                ((RadioButton) findViewById(R.id.systemThemeRadio)).setChecked(true);
+        }
+
+        int cursorType = prefs.getInt(CURSOR_TYPE_KEY, 0);
+        switch (cursorType) {
+            case 1:
+                ((RadioButton) findViewById(R.id.lineCursorRadio)).setChecked(true);
+                break;
+            case 2:
+                ((RadioButton) findViewById(R.id.blockCursorRadio)).setChecked(true);
+                break;
+            default:
+                ((RadioButton) findViewById(R.id.underlineCursorRadio)).setChecked(true);
+        }
+
+        int timerStyle = prefs.getInt(TIMER_STYLE_KEY, 0);
+        switch (timerStyle) {
+            case 1:
+                ((RadioButton) findViewById(R.id.progressTimerRadio)).setChecked(true);
+                break;
+            case 2:
+                ((RadioButton) findViewById(R.id.combinedTimerRadio)).setChecked(true);
+                break;
+            default:
+                ((RadioButton) findViewById(R.id.digitalTimerRadio)).setChecked(true);
+        }
+    }
+
+    private void setupTimerStyleSelector() {
+        RadioGroup timerStyleRadioGroup = findViewById(R.id.timerStyleRadioGroup);
+        timerStyleRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+            int timerStyle;
+
+            if (checkedId == R.id.progressTimerRadio) {
+                timerStyle = 1;
+            } else if (checkedId == R.id.combinedTimerRadio) {
+                timerStyle = 2;
+            } else {
+                timerStyle = 0;
+            }
+
+            editor.putInt(TIMER_STYLE_KEY, timerStyle);
+            editor.apply();
+            Toast.makeText(this, "Стиль таймера изменен", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void setupThemeSelector() {
-        int currentMode = AppCompatDelegate.getDefaultNightMode();
-        switch (currentMode) {
-            case AppCompatDelegate.MODE_NIGHT_NO:
-                lightThemeRadio.setChecked(true);
-                break;
-            case AppCompatDelegate.MODE_NIGHT_YES:
-                darkThemeRadio.setChecked(true);
-                break;
-            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
-            default:
-                systemThemeRadio.setChecked(true);
-                break;
-        }
-
         themeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+            int themeMode;
+
             if (checkedId == R.id.lightThemeRadio) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                themeMode = AppCompatDelegate.MODE_NIGHT_NO;
             } else if (checkedId == R.id.darkThemeRadio) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else if (checkedId == R.id.systemThemeRadio) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                themeMode = AppCompatDelegate.MODE_NIGHT_YES;
+            } else {
+                themeMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             }
+
+            editor.putInt(THEME_MODE_KEY, themeMode);
+            editor.apply();
+            AppCompatDelegate.setDefaultNightMode(themeMode);
+        });
+    }
+
+    private void setupCursorSelector() {
+        cursorRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+            int cursorType;
+
+            if (checkedId == R.id.lineCursorRadio) {
+                cursorType = 1;
+            } else if (checkedId == R.id.blockCursorRadio) {
+                cursorType = 2;
+            } else {
+                cursorType = 0;
+            }
+
+            editor.putInt(CURSOR_TYPE_KEY, cursorType);
+            editor.apply();
+            Toast.makeText(this, "Настройки курсора сохранены", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void logoutUser() {
         mAuth.signOut();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        startActivity(new Intent(this, LoginActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
         finish();
     }
 
     private void showDeleteAccountDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Удаление аккаунта")
-                .setMessage("Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить!")
-                .setPositiveButton("Удалить", (dialog, which) -> deleteAccount())
-                .setNegativeButton("Отмена", null)
-                .show();
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_confirm_action, null);
+
+        TextView title = dialogView.findViewById(R.id.dialog_title);
+        TextView message = dialogView.findViewById(R.id.dialog_message);
+        MaterialButton cancelBtn = dialogView.findViewById(R.id.btn_cancel);
+        MaterialButton confirmBtn = dialogView.findViewById(R.id.btn_confirm);
+
+        title.setText("Удаление аккаунта");
+        message.setText("Вы уверены, что хотите удалить свой аккаунт? Все данные будут безвозвратно утеряны.");
+        confirmBtn.setText("Удалить");
+
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
+
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        confirmBtn.setOnClickListener(v -> {
+            dialog.dismiss();
+            deleteAccount();
+        });
+
+        dialog.show();
     }
 
     private void deleteAccount() {
-        FirebaseUser user = mAuth.getCurrentUser();
-
-        if (user != null) {
-            user.delete()
+        if (mAuth.getCurrentUser() != null) {
+            mAuth.getCurrentUser().delete()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(SettingsActivity.this, "Аккаунт успешно удален", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Аккаунт удален", Toast.LENGTH_SHORT).show();
                             logoutUser();
                         } else {
-                            Toast.makeText(SettingsActivity.this, "Ошибка удаления аккаунта: " +
-                                    task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Ошибка: " + Objects.requireNonNull(task.getException()).getMessage(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
         }
