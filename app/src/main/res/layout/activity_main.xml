@@ -62,11 +62,11 @@
                 android:id="@+id/wordsTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Нажмите сюда"
                 android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="?attr/colorOnSurface"
                 android:padding="16dp"
+                android:text="Нажмите сюда"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText" />
         </com.google.android.material.card.MaterialCardView>
 
@@ -109,12 +109,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
+        <LinearLayout
+            android:id="@+id/bottom_navigation_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/bottom_nav_menu"
-            tools:ignore="VisualLintBottomNav" />
+            android:layout_alignParentBottom="true">
+
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                app:menu="@menu/bottom_nav_menu"/>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/keyboardLayout"
