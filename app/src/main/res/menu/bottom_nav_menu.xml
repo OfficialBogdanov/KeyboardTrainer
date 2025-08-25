@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_game"
+        android:icon="@drawable/home"
+    android:title="@string/menu_1"/>
+
+    <item
+        android:id="@+id/navigation_stats"
+        android:icon="@drawable/bar_chart"
+        android:title="@string/menu_2"/>
+
+    <item
+        android:id="@+id/navigation_achievements"
+        android:icon="@drawable/award"
+        android:title="@string/menu_achievements"/>
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/settings"
+        android:title="@string/menu_3"/>
+</menu>

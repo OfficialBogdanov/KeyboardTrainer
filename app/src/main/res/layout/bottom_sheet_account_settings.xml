@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_top_corners"
+    android:padding="16dp">
+
+    <View
+        android:id="@+id/accountDivider"
+        android:layout_width="75dp"
+        android:layout_height="4dp"
+        android:background="@drawable/rounded_divider"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/accountTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/account_title"
+        android:textSize="20sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="1dp">
+
+        <TextView
+            android:id="@+id/infoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/info_title"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            tools:ignore="TextContrastCheck" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/user24"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/userNameText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"/>
+
+                <TextView
+                    android:id="@+id/userEmailText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/calendar"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/accountDateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"/>
+
+                <TextView
+                    android:id="@+id/accountTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:padding="16dp"
+        android:elevation="1dp">
+
+        <TextView
+            android:id="@+id/accountHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/account_hint"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            tools:ignore="TextContrastCheck" />
+
+        <LinearLayout
+            android:id="@+id/nameSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/nameIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/edit"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/nameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/account_name"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"/>
+
+                <TextView
+                    android:id="@+id/nameSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/account_name_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nameChevron"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/chevron_right"
+                app:tint="?attr/colorOnSurfaceVariant"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/deleteAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/deleteIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/delete"
+                app:tint="?attr/colorError"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/deleteTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/account_delete"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorError"/>
+
+                <TextView
+                    android:id="@+id/deleteSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/account_delete_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/deleteChevron"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/chevron_right"
+                app:tint="?attr/colorOnSurfaceVariant"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

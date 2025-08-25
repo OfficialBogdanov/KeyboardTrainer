@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/rounded_top_corners">
+
+    <View
+        android:id="@+id/accountDivider"
+        android:layout_width="75dp"
+        android:layout_height="4dp"
+        android:background="@drawable/rounded_divider"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/gameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/game_title"
+        android:textSize="20sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="1dp">
+
+        <TextView
+            android:id="@+id/gameSectionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/game_game_title"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            tools:ignore="TextContrastCheck" />
+
+        <LinearLayout
+            android:id="@+id/difficultySettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/difficultyIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/cloud"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/difficultyTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/game_game"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"/>
+
+                <TextView
+                    android:id="@+id/difficultySubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/game_game_text"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/difficultyChevron"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/chevron_right"
+                app:tint="?attr/colorOnSurfaceVariant"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/rounded_corners"
+        android:padding="16dp"
+        android:elevation="1dp">
+
+        <TextView
+            android:id="@+id/uiSectionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/game_ui_title"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            tools:ignore="TextContrastCheck" />
+
+        <LinearLayout
+            android:id="@+id/cursorSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/cursorIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/edit"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/cursorTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/game_ui_cursor"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"/>
+
+                <TextView
+                    android:id="@+id/cursorSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/game_ui_cursor_text"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/cursorChevron"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/chevron_right"
+                app:tint="?attr/colorOnSurfaceVariant"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timerSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/timerIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/time"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/timerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="@string/game_ui_timer"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorOnSurface"/>
+
+                <TextView
+                    android:id="@+id/timerSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/game_ui_timer_text"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/timerChevron"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/chevron_right"
+                app:tint="?attr/colorOnSurfaceVariant"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,69 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.KeyboardTrainer" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+        <item name="android:textAppearance">@style/TextAppearance.KeyboardTrainer</item>
+
+        <item name="colorPrimary">@color/light_primary</item>
+        <item name="colorOnPrimary">@color/light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/light_onPrimaryContainer</item>
+
+        <item name="colorSurface">@color/light_surface</item>
+        <item name="colorOnSurface">@color/light_onSurface</item>
+        <item name="colorSurfaceVariant">@color/light_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/light_onSurfaceVariant</item>
+
+        <item name="android:statusBarColor" tools:targetApi="l" tools:ignore="ObsoleteSdkInt">?attr/colorSurface</item>
+        <item name="android:navigationBarColor" tools:targetApi="l" tools:ignore="ObsoleteSdkInt">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m" tools:ignore="ObsoleteSdkInt">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1" tools:ignore="ObsoleteSdkInt">true</item>
+
+        <item name="materialButtonStyle">@style/Widget.KeyboardTrainer.Button</item>
+        <item name="textInputStyle">@style/Widget.KeyboardTrainer.TextInputLayout</item>
+        <item name="bottomNavigationStyle">@style/Widget.KeyboardTrainer.BottomNavigationView</item>
+    </style>
+
+    <style name="Theme.KeyboardTrainer" parent="Base.Theme.KeyboardTrainer">
+    </style>
+
+    <style name="TextAppearance.KeyboardTrainer" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+    </style>
+
+    <style name="Widget.KeyboardTrainer.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.KeyboardTrainer.Medium</item>
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+    </style>
+
+    <style name="Widget.KeyboardTrainer.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="hintTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+    </style>
+
+    <style name="ShapeAppearance.KeyboardTrainer.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="Widget.KeyboardTrainer.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemBackground">@android:color/transparent</item>
+        <item name="itemRippleColor">@android:color/transparent</item>
+        <item name="itemActiveIndicatorStyle">@style/ActiveItemIndicator</item>
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+    </style>
+
+    <style name="ActiveItemIndicator" parent="@style/Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:width">32dp</item>
+        <item name="android:height">32dp</item>
+        <item name="android:color">?attr/colorSurface</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.KeyboardTrainer.Medium</item>
+    </style>
+</resources>

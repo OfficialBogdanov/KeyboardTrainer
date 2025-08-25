@@ -1,0 +1,34 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.KeyboardTrainer" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+        <item name="android:textAppearance">@style/TextAppearance.KeyboardTrainer</item>
+
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="colorOnPrimary">@color/dark_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/dark_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/dark_onPrimaryContainer</item>
+
+        <item name="colorSurface">@color/dark_surface</item>
+        <item name="colorOnSurface">@color/dark_onSurface</item>
+        <item name="colorSurfaceVariant">@color/dark_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/dark_onSurfaceVariant</item>
+
+        <item name="android:statusBarColor" tools:targetApi="l" tools:ignore="ObsoleteSdkInt">?attr/colorSurface</item>
+        <item name="android:navigationBarColor" tools:targetApi="l" tools:ignore="ObsoleteSdkInt">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m" tools:ignore="ObsoleteSdkInt">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1" tools:ignore="ObsoleteSdkInt">false</item>
+
+        <item name="materialButtonStyle">@style/Widget.KeyboardTrainer.Button</item>
+        <item name="textInputStyle">@style/Widget.KeyboardTrainer.TextInputLayout</item>
+        <item name="bottomNavigationStyle">@style/Widget.KeyboardTrainer.BottomNavigationView</item>
+    </style>
+
+    <style name="Theme.KeyboardTrainer" parent="Base.Theme.KeyboardTrainer">
+    </style>
+
+    <style name="TextAppearance.KeyboardTrainer" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+        <item name="fontFamily">@font/comfortaa_regular</item>
+    </style>
+</resources>

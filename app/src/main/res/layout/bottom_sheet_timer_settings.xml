@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_top_corners"
+    android:padding="16dp">
+
+    <View
+        android:id="@+id/accountDivider"
+        android:layout_width="75dp"
+        android:layout_height="4dp"
+        android:background="@drawable/rounded_divider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/settingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/timer_title"
+        android:textSize="20sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/accountDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:background="@drawable/bg_selectable_item"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/digitalTimerOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/settingsTitle"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:id="@+id/digitalTimerRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:id="@+id/digitalTimerIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/alarm"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:id="@+id/digitalTimerTextContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/digitalTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timer_digit"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/digitalTimerSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timer_digit_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@drawable/bg_selectable_item"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/progressTimerOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/digitalTimerOption"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/progressTimerRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:id="@+id/progressTimerIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/bar"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:id="@+id/progressTimerTextContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/progressTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timer_bar"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/progressTimerSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timer_bar_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@drawable/bg_selectable_item"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/combinedTimerOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/progressTimerOption"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/combinedTimerRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:id="@+id/combinedTimerIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/combine"
+                app:tint="?attr/colorOnSurface"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:id="@+id/combinedTimerTextContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                tools:ignore="InefficientWeight">
+
+                <TextView
+                    android:id="@+id/combinedTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timer_combine"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/combinedTimerSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timer_combine_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

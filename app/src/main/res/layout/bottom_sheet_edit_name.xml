@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_top_corners"
+    android:padding="16dp">
+
+    <View
+        android:id="@+id/accountDivider"
+        android:layout_width="75dp"
+        android:layout_height="4dp"
+        android:background="@drawable/rounded_divider"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/name_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.KeyboardTrainer.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:startIconDrawable="@drawable/user24"
+        app:startIconTint="?attr/colorPrimary"
+        app:boxStrokeColor="?attr/colorPrimary"
+        app:hintTextColor="?attr/colorOnSurfaceVariant"
+        app:errorTextColor="?attr/colorError">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name_text"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
+            tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveNameButton"
+        style="@style/Widget.KeyboardTrainer.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="@string/save_changes"
+        app:backgroundTint="?attr/colorPrimary"
+        app:rippleColor="?attr/colorOnPrimaryContainer"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        tools:ignore="VisualLintButtonSize,TextContrastCheck" />
+</LinearLayout>

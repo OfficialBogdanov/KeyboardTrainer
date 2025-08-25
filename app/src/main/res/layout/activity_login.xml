@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:padding="24dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_title"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:text="@string/login_hello"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.KeyboardTrainer.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:startIconDrawable="@drawable/mail"
+                app:startIconTint="?attr/colorPrimary"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorOnSurfaceVariant">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="?attr/colorOnSurfaceVariant"
+                    tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.KeyboardTrainer.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:startIconDrawable="@drawable/lock"
+                app:startIconTint="?attr/colorPrimary"
+                app:endIconMode="password_toggle"
+                app:endIconTint="?attr/colorOnSurfaceVariant"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:hintTextColor="?attr/colorOnSurfaceVariant"
+                tools:ignore="PrivateResource">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_password"
+                    android:inputType="textPassword"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="?attr/colorOnSurfaceVariant"
+                    tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_login"
+                style="@style/Widget.KeyboardTrainer.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/login_login"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:backgroundTint="?attr/colorPrimary"
+                app:rippleColor="?attr/colorOnPrimaryContainer"
+                tools:ignore="VisualLintButtonSize,TextContrastCheck" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_text"
+            android:textColor="?attr/colorOnSurfaceVariant"/>
+
+        <TextView
+            android:id="@+id/btn_switch_to_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="@string/login_redirect"
+            android:textColor="?attr/colorPrimary"
+            tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
+    </LinearLayout>
+</RelativeLayout>

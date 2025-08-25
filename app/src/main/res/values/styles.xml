@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.KeyboardTrainer.Medium</item>
+        <item name="backgroundTint">?attr/colorSurface</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+    </style>
+
+    <style name="CustomTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/comfortaa_regular</item>
+    </style>
+</resources>
