@@ -94,8 +94,8 @@
     <!-- Stats Activity -->
     <string name="stat_search">Поиск</string>
     <string name="stat_sort">Сортировка:</string>
-    <string name="stat_date">По дате</string>
-    <string name="stat_score">По очкам</string>
+    <string name="stat_date">Дата</string>
+    <string name="stat_score">Очки</string>
     <string name="statistics_title">Статистика</string>
     <string name="user_section_title">Пользователь</string>
     <string name="stats_section_title">Статистика</string>
@@ -104,6 +104,12 @@
     <string name="detail_delete_hint">Безвозвратное действие</string>
     <string name="game">Игра</string>
     <string name="you">Вы</string>
+    <string name="stats_anonymous_title">Статистика недоступна</string>
+    <string name="stats_anonymous_message">Для просмотра статистики необходимо войти в аккаунт</string>
+    <string name="premium_title">Премиум подписка</string>
+    <string name="premium_text">Для доступа к просмотру статистики необходимо приобрести подписку</string>
+    <string name="premiun_buy">Купить подписку - 199₽/мес</string>
+    <string name="premiun_cancel">Продолжить без подписки</string>
 
     <!-- Achievements Activity -->
     <string name="achievements_title">Мои достижения</string>

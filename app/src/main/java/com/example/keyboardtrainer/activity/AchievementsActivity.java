@@ -16,14 +16,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class AchievementsActivity extends BaseActivity {
     private AchievementsAdapter adapter;
     private final List<Achievement> achievements = new ArrayList<>();
+    /** @noinspection MismatchedQueryAndUpdateOfCollection*/
+    private final Map<String, Integer> achievementProgressMap = new HashMap<>();
 
     // Lifecycle
     @Override
@@ -53,6 +57,15 @@ public class AchievementsActivity extends BaseActivity {
         loadUserAchievements();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && !user.isAnonymous()) {
+            loadUserAchievements();
+        }
+    }
+
     // Anonymous
     private void showAnonymousUserMessage() {
         setContentView(R.layout.activity_anonymous_achievements);
@@ -73,6 +86,8 @@ public class AchievementsActivity extends BaseActivity {
 
     // Achievements
     private void initializeAchievements() {
+        achievements.clear();
+
         achievements.add(new Achievement("beginner",
                 getString(R.string.achievement_beginner),
                 getString(R.string.achievement_beginner_desc),
@@ -131,78 +146,120 @@ public class AchievementsActivity extends BaseActivity {
 
         FirebaseFirestore.getInstance().collection("users")
                 .document(user.getUid())
-                .collection("achievements")
                 .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    checkUnlockedAchievements(user.getUid());
-                    loadAchievementProgress(user.getUid());
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        loadUserStatsAndCheckAchievements(user.getUid(), documentSnapshot);
+                    }
                 });
     }
 
-    private void checkUnlockedAchievements(String userId) {
+    private void loadUserStatsAndCheckAchievements(String userId, DocumentSnapshot documentSnapshot) {
+        int totalCharsTyped = documentSnapshot.getLong("totalCharsTyped") != null ?
+                Objects.requireNonNull(documentSnapshot.getLong("totalCharsTyped")).intValue() : 0;
+        int maxSpeed = documentSnapshot.getLong("maxSpeed") != null ?
+                Objects.requireNonNull(documentSnapshot.getLong("maxSpeed")).intValue() : 0;
+        float maxAccuracy = documentSnapshot.getDouble("maxAccuracy") != null ?
+                Objects.requireNonNull(documentSnapshot.getDouble("maxAccuracy")).floatValue() : 0;
+        int sessionsCompleted = documentSnapshot.getLong("sessionsCompleted") != null ?
+                Objects.requireNonNull(documentSnapshot.getLong("sessionsCompleted")).intValue() : 0;
+        int flawlessSessions = documentSnapshot.getLong("flawlessSessions") != null ?
+                Objects.requireNonNull(documentSnapshot.getLong("flawlessSessions")).intValue() : 0;
+
+        for (Achievement achievement : achievements) {
+            int progress = 0;
+
+            switch (achievement.getId()) {
+                case "beginner":
+                    progress = sessionsCompleted > 0 ? 1 : 0;
+                    break;
+                case "pro":
+                    progress = Math.min(totalCharsTyped, achievement.getTarget());
+                    break;
+                case "speedster":
+                    progress = Math.min(maxSpeed, achievement.getTarget());
+                    break;
+                case "accuracy":
+                    progress = Math.min((int) maxAccuracy, achievement.getTarget());
+                    break;
+                case "marathon":
+                    progress = Math.min(sessionsCompleted, achievement.getTarget());
+                    break;
+                case "master":
+                    progress = Math.min(totalCharsTyped, achievement.getTarget());
+                    break;
+                case "lightning":
+                    progress = Math.min(maxSpeed, achievement.getTarget());
+                    break;
+                case "sniper":
+                    progress = Math.min((int) maxAccuracy, achievement.getTarget());
+                    break;
+                case "legend":
+                    progress = Math.min(sessionsCompleted, achievement.getTarget());
+                    break;
+                case "flawless":
+                    progress = Math.min(flawlessSessions, achievement.getTarget());
+                    break;
+            }
+
+            achievement.setProgress(progress);
+            boolean isAchieved = progress >= achievement.getTarget();
+            achievement.setAchieved(isAchieved);
+
+            achievementProgressMap.put(achievement.getId(), progress);
+        }
+
+        loadUnlockedAchievements(userId);
+    }
+
+    private void loadUnlockedAchievements(String userId) {
         FirebaseFirestore.getInstance().collection("users")
                 .document(userId)
                 .collection("achievements")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    Set<String> unlocked = new HashSet<>();
+                    Set<String> unlockedAchievements = new HashSet<>();
+
                     for (DocumentSnapshot doc : querySnapshot) {
-                        if (doc.getBoolean("achieved") != null && Boolean.TRUE.equals(doc.getBoolean("achieved"))) {
-                            unlocked.add(doc.getId());
+                        if (doc.getBoolean("achieved") != null &&
+                                Boolean.TRUE.equals(doc.getBoolean("achieved"))) {
+                            unlockedAchievements.add(doc.getId());
                         }
                     }
 
                     for (Achievement achievement : achievements) {
-                        if (unlocked.contains(achievement.getId())) {
+                        if (unlockedAchievements.contains(achievement.getId())) {
                             achievement.setAchieved(true);
                             achievement.setProgress(achievement.getTarget());
                         }
                     }
 
                     adapter.updateAchievements(achievements);
+
+                    checkAndUnlockNewAchievements(userId);
                 });
     }
 
-    private void loadAchievementProgress(String userId) {
-        FirebaseFirestore.getInstance().collection("users")
-                .document(userId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        int totalCharsTyped = documentSnapshot.getLong("totalCharsTyped") != null ?
-                                Objects.requireNonNull(documentSnapshot.getLong("totalCharsTyped")).intValue() : 0;
-                        int maxSpeed = documentSnapshot.getLong("maxSpeed") != null ?
-                                Objects.requireNonNull(documentSnapshot.getLong("maxSpeed")).intValue() : 0;
-                        float maxAccuracy = documentSnapshot.getDouble("maxAccuracy") != null ?
-                                Objects.requireNonNull(documentSnapshot.getDouble("maxAccuracy")).floatValue() : 0;
-                        int sessionsCompleted = documentSnapshot.getLong("sessionsCompleted") != null ?
-                                Objects.requireNonNull(documentSnapshot.getLong("sessionsCompleted")).intValue() : 0;
+    private void checkAndUnlockNewAchievements(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                        for (Achievement achievement : achievements) {
-                            switch (achievement.getId()) {
-                                case "beginner":
-                                    if (sessionsCompleted > 0) {
-                                        achievement.setProgress(1);
-                                    }
-                                    break;
-                                case "pro":
-                                    achievement.setProgress(totalCharsTyped);
-                                    break;
-                                case "speedster":
-                                    achievement.setProgress(maxSpeed);
-                                    break;
-                                case "accuracy":
-                                    achievement.setProgress((int) maxAccuracy);
-                                    break;
-                                case "marathon":
-                                    achievement.setProgress(sessionsCompleted);
-                                    break;
-                            }
-                        }
+        for (Achievement achievement : achievements) {
+            if (achievement.getProgress() >= achievement.getTarget() && !achievement.isAchieved()) {
+                achievement.setAchieved(true);
 
-                        adapter.updateAchievements(achievements);
-                    }
-                });
+                Map<String, Object> achievementData = new HashMap<>();
+                achievementData.put("achieved", true);
+                achievementData.put("progress", achievement.getProgress());
+                achievementData.put("unlockedAt", System.currentTimeMillis());
+
+                db.collection("users")
+                        .document(userId)
+                        .collection("achievements")
+                        .document(achievement.getId())
+                        .set(achievementData)
+                        .addOnSuccessListener(aVoid -> adapter.updateAchievements(achievements));
+            }
+        }
     }
 
     // Navigation

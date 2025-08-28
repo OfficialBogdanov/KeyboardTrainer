@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.example.keyboardtrainer.R;
+import com.example.keyboardtrainer.components.SubscriptionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
@@ -43,6 +45,7 @@ public class StatsActivity extends BaseActivity {
     private FirebaseAuth auth;
     private EditText searchInput;
     private MaterialButton sortDateButton, sortScoreButton;
+    private SubscriptionManager subscriptionManager;
 
     private boolean sortByDate = true;
     private boolean sortAscending = false;
@@ -52,14 +55,62 @@ public class StatsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stats);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null || user.isAnonymous()) {
+            showAnonymousUserMessage();
+            return;
+        }
+
+        subscriptionManager = new SubscriptionManager(this);
+
+        if (!subscriptionManager.isSubscribed()) {
+            showSubscriptionRequired();
+            return;
+        }
+
+        setContentView(R.layout.activity_stats);
         initializeViews();
         initializeFirebase();
         setupBottomNavigation();
         setupSortButtons();
         setupSearch();
         loadUserStats();
+    }
+
+    private void showAnonymousUserMessage() {
+        setContentView(R.layout.activity_anonymous_stats);
+
+        Button loginButton = findViewById(R.id.btn_login);
+        Button continueButton = findViewById(R.id.btn_continue);
+
+        loginButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
+
+        continueButton.setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        });
+    }
+
+    private void showSubscriptionRequired() {
+        setContentView(R.layout.activity_subscription_required);
+
+        MaterialButton btnBuy = findViewById(R.id.btn_buy);
+        MaterialButton btnContinue = findViewById(R.id.btn_continue);
+
+        btnBuy.setOnClickListener(v -> purchaseSubscription());
+
+        btnContinue.setOnClickListener(v -> finish());
+    }
+
+    private void purchaseSubscription() {
+        subscriptionManager.activateSubscription(1);
+        Toast.makeText(this, "Подписка активирована!", Toast.LENGTH_SHORT).show();
+
+        recreate();
     }
 
     // Initialization

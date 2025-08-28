@@ -33,7 +33,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -44,6 +43,8 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    //noinspection UseTomlInstead
     implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
+    //noinspection UseTomlInstead,GradleDependency
     implementation("com.google.android.material:material:1.11.0")
 }

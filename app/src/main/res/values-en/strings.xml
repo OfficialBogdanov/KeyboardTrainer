@@ -94,8 +94,8 @@
     <!-- Stats Activity -->
     <string name="stat_search">Search</string>
     <string name="stat_sort">Sort by:</string>
-    <string name="stat_date">By date</string>
-    <string name="stat_score">By score</string>
+    <string name="stat_date">Date</string>
+    <string name="stat_score">Score</string>
     <string name="statistics_title">Statistics</string>
     <string name="user_section_title">User</string>
     <string name="stats_section_title">Statistics</string>
@@ -104,6 +104,12 @@
     <string name="detail_delete_hint">Irrevocable action</string>
     <string name="game">Game</string>
     <string name="you">You</string>
+    <string name="stats_anonymous_title">Statistic not available</string>
+    <string name="stats_anonymous_message">To get them you need to authorize</string>
+    <string name="premium_title">Premium subscription</string>
+    <string name="premium_text">You need to purchase a subscription to access the statistics</string>
+    <string name="premiun_buy">Buy - 199₽/month</string>
+    <string name="premiun_cancel">Continue without</string>
 
     <!-- Achievements Activity -->
     <string name="achievements_title">My Achievements</string>
